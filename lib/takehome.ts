@@ -29,7 +29,11 @@ export type TakehomeResult = {
   calculationNotes: string[];
 };
 
-export const SEO_SALARY_LEVELS = [3_000_000, 4_000_000, 5_000_000, 6_000_000, 7_000_000, 8_000_000];
+export const SEO_SALARY_MIN = 2_000_000;
+export const SEO_SALARY_MAX = 12_000_000;
+export const SEO_SALARY_STEP = 100_000;
+export const SEO_SALARY_LEVELS = buildSalaryLevels(SEO_SALARY_MIN, SEO_SALARY_MAX, SEO_SALARY_STEP);
+export const POPULAR_SALARY_LEVELS = [3_000_000, 4_000_000, 5_000_000, 6_000_000, 7_000_000, 8_000_000];
 
 export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult {
   const safeInput = normalizeInput(input);
@@ -162,4 +166,34 @@ function findIncomeTaxRate(taxable: number, brackets: IncomeTaxBracket[]): numbe
   if (taxable <= 0) return 0;
   const bracket = brackets.find((b) => taxable <= b.upper);
   return bracket?.rate ?? 0;
+}
+
+function buildSalaryLevels(min: number, max: number, step: number): number[] {
+  const values: number[] = [];
+  for (let salary = min; salary <= max; salary += step) {
+    values.push(salary);
+  }
+  return values;
+}
+
+export function toSalarySlug(annualGross: number): string {
+  return String(Math.round(annualGross / 10_000));
+}
+
+export function fromSalarySlug(salaryParam: string): number | null {
+  const unit = Number(salaryParam);
+  if (!Number.isFinite(unit) || unit <= 0) return null;
+  return Math.round(unit * 10_000);
+}
+
+export function getNearbySalaryLevels(annualGross: number): number[] {
+  const currentIndex = SEO_SALARY_LEVELS.indexOf(annualGross);
+  if (currentIndex === -1) return POPULAR_SALARY_LEVELS.slice(0, 5);
+
+  const indexes = [currentIndex - 2, currentIndex - 1, currentIndex + 1, currentIndex + 2];
+  const values = indexes
+    .map((index) => SEO_SALARY_LEVELS[index])
+    .filter((value): value is number => typeof value === "number");
+
+  return values.length > 0 ? values : POPULAR_SALARY_LEVELS.slice(0, 5);
 }

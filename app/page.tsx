@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AdPlacementExperiment } from "./components/ad-placement-experiment";
 import { TakehomeCalculator } from "./components/takehome-calculator";
-import { SEO_SALARY_LEVELS } from "@/lib/takehome";
+import { POPULAR_SALARY_LEVELS, toSalarySlug } from "@/lib/takehome";
 
 export default function HomePage() {
   return (
@@ -20,8 +20,8 @@ export default function HomePage() {
         <section className="card mt-20">
           <h2>年収別ページ</h2>
           <div className="seo-links mt-12">
-            {SEO_SALARY_LEVELS.map((salary) => (
-              <Link key={salary} href={`/takehome/${salary / 10000}`}>
+            {POPULAR_SALARY_LEVELS.map((salary) => (
+              <Link key={salary} href={`/takehome/${toSalarySlug(salary)}`}>
                 年収{salary.toLocaleString("ja-JP")}円の手取り目安
               </Link>
             ))}

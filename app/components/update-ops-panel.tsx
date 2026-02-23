@@ -59,6 +59,19 @@ export function UpdateOpsPanel() {
     const text = buildIcsText(reminderDate);
     return `data:text/calendar;charset=utf-8,${encodeURIComponent(text)}`;
   }, [reminderDate]);
+  const todoText = useMemo(() => {
+    const rows = [
+      `税制更新ToDo (${reminderDate})`,
+      ...CHECKLIST_ITEMS.map((item) => `- [ ] ${item}`),
+      "- [ ] Search Consoleで主要URLの再クロール申請",
+      "- [ ] 週次SEOレポートの優先URLを更新",
+    ];
+    return rows.join("\n");
+  }, [reminderDate]);
+  const todoUrl = useMemo(
+    () => `data:text/plain;charset=utf-8,${encodeURIComponent(todoText)}`,
+    [todoText]
+  );
 
   function toggle(index: number) {
     const next = checked.map((item, i) => (i === index ? !item : item));
@@ -93,6 +106,9 @@ export function UpdateOpsPanel() {
       </div>
       <a className="button mt-12 inline-button" href={icsUrl} download="tax-update-reminder.ics">
         カレンダーに毎年リマインドを追加
+      </a>
+      <a className="button mt-12 inline-button" href={todoUrl} download="tax-update-todo.txt">
+        ToDoテンプレートを出力
       </a>
     </section>
   );
