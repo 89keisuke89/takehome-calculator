@@ -10,12 +10,9 @@ export type SeoReport = {
 
 export function generateWeeklySeoReport(baseUrl: string): SeoReport {
   const generatedAt = new Date().toISOString();
-  const topLevels = POPULAR_SALARY_LEVELS;
-  const longTailLevels = SEO_SALARY_LEVELS.filter(
-    (salary) => salary % 500_000 !== 0 && salary >= 2_500_000 && salary <= 9_500_000
-  ).slice(0, 10);
-
-  const priorityUrls = [...topLevels, ...longTailLevels].map(
+  const topLevels = POPULAR_SALARY_LEVELS.slice(0, 6);
+  const additionalLevels = SEO_SALARY_LEVELS.filter((salary) => !topLevels.includes(salary));
+  const priorityUrls = [...topLevels, ...additionalLevels].map(
     (salary) => `${baseUrl}/takehome/${toSalarySlug(salary)}`
   );
 
