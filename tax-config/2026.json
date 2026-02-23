@@ -21,8 +21,20 @@
   "employmentIncomeDeductionMax": 1950000,
   "basicDeductionIncomeTax": 480000,
   "basicDeductionResidentTax": 430000,
-  "dependentDeductionIncomeTax": 380000,
-  "dependentDeductionResidentTax": 330000,
+  "spouseDeductionIncomeTax": 380000,
+  "spouseDeductionResidentTax": 330000,
+  "dependentDeductionIncomeTax": {
+    "general": 380000,
+    "specified": 630000,
+    "elderly": 480000
+  },
+  "dependentDeductionResidentTax": {
+    "general": 330000,
+    "specified": 450000,
+    "elderly": 380000
+  },
+  "lifeInsuranceDeductionIncomeTaxMax": 40000,
+  "lifeInsuranceDeductionResidentTaxMax": 28000,
   "residentPerCapitaLevy": 5000,
   "residentBaseRate": 0.1,
   "residentTaxExemptionIncome": 1000000,
@@ -36,6 +48,30 @@
         { "upper": 999999999999, "rate": 0.16 }
       ],
       "careInsuranceRate": 0.008,
+      "businessExpenseRate": 0,
+      "useEmploymentIncomeDeduction": true
+    },
+    "contract": {
+      "socialInsuranceRates": [
+        { "upper": 2500000, "rate": 0.132 },
+        { "upper": 4000000, "rate": 0.142 },
+        { "upper": 7000000, "rate": 0.148 },
+        { "upper": 10000000, "rate": 0.153 },
+        { "upper": 999999999999, "rate": 0.158 }
+      ],
+      "careInsuranceRate": 0.008,
+      "businessExpenseRate": 0,
+      "useEmploymentIncomeDeduction": true
+    },
+    "part_time": {
+      "socialInsuranceRates": [
+        { "upper": 2000000, "rate": 0.12 },
+        { "upper": 3500000, "rate": 0.13 },
+        { "upper": 5500000, "rate": 0.14 },
+        { "upper": 8000000, "rate": 0.145 },
+        { "upper": 999999999999, "rate": 0.15 }
+      ],
+      "careInsuranceRate": 0.007,
       "businessExpenseRate": 0,
       "useEmploymentIncomeDeduction": true
     },

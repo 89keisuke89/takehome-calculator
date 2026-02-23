@@ -1,13 +1,42 @@
 import { DEFAULT_PREFECTURE, type PrefectureCode, getPrefectureConfig } from "./prefectures";
-import { DEFAULT_TAX_YEAR, getTaxConfig, type EmploymentType, type IncomeTaxBracket, type RangeRate } from "./tax-config";
+import {
+  DEFAULT_TAX_YEAR,
+  getTaxConfig,
+  type EmploymentType,
+  type IncomeTaxBracket,
+  type RangeRate,
+} from "./tax-config";
+
+export type DependentProfile = {
+  spouse: boolean;
+  general: number;
+  specified: number;
+  elderly: number;
+};
+
+export type DeductionOptions = {
+  idecoEnabled: boolean;
+  lifeInsuranceEnabled: boolean;
+  hometownTaxEnabled: boolean;
+  housingLoanEnabled: boolean;
+};
+
+export type InsuranceInput = {
+  mode: "auto" | "manual";
+  manualAmount: number;
+};
 
 export type TakehomeInput = {
   annualGross: number;
-  dependents: number;
   age: number;
   taxYear: number;
   employmentType: EmploymentType;
   prefecture: PrefectureCode;
+  dependentProfile: DependentProfile;
+  deductionOptions: DeductionOptions;
+  insuranceInput: InsuranceInput;
+  // Backward compatibility for existing callers.
+  dependents?: number;
 };
 
 export type TakehomeResult = {
@@ -26,14 +55,29 @@ export type TakehomeResult = {
   annualTakehome: number;
   monthlyTakehome: number;
   burdenRate: number;
+  deductionTotalIncomeTax: number;
+  deductionTotalResidentTax: number;
+  taxCreditIncomeTax: number;
+  taxCreditResidentTax: number;
   calculationNotes: string[];
 };
 
 export const SEO_SALARY_MIN = 2_000_000;
 export const SEO_SALARY_MAX = 12_000_000;
 export const SEO_SALARY_STEP = 100_000;
-export const SEO_SALARY_LEVELS = buildSalaryLevels(SEO_SALARY_MIN, SEO_SALARY_MAX, SEO_SALARY_STEP);
-export const POPULAR_SALARY_LEVELS = [3_000_000, 4_000_000, 5_000_000, 6_000_000, 7_000_000, 8_000_000];
+export const SEO_SALARY_LEVELS = buildSalaryLevels(
+  SEO_SALARY_MIN,
+  SEO_SALARY_MAX,
+  SEO_SALARY_STEP
+);
+export const POPULAR_SALARY_LEVELS = [
+  3_000_000,
+  4_000_000,
+  5_000_000,
+  6_000_000,
+  7_000_000,
+  8_000_000,
+];
 
 export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult {
   const safeInput = normalizeInput(input);
@@ -43,10 +87,16 @@ export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult
 
   const baseGross = Math.max(0, safeInput.annualGross);
   const annualBusinessIncome = baseGross * (1 - model.businessExpenseRate);
-  const socialInsuranceRate =
+
+  const autoInsuranceRate =
     pickRateByRange(baseGross, model.socialInsuranceRates) +
     (safeInput.age >= 40 && safeInput.age < 65 ? model.careInsuranceRate : 0);
-  const socialInsurance = annualBusinessIncome * socialInsuranceRate;
+  const autoInsuranceAmount = annualBusinessIncome * autoInsuranceRate;
+  const socialInsurance =
+    safeInput.insuranceInput.mode === "manual"
+      ? Math.max(0, safeInput.insuranceInput.manualAmount)
+      : autoInsuranceAmount;
+  const socialInsuranceRate = annualBusinessIncome > 0 ? socialInsurance / annualBusinessIncome : 0;
 
   const employmentIncomeDeduction = model.useEmploymentIncomeDeduction
     ? calcEmploymentIncomeDeduction(
@@ -57,18 +107,42 @@ export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult
       )
     : 0;
 
-  const incomeDependentDeduction =
-    Math.max(0, safeInput.dependents) * config.dependentDeductionIncomeTax;
-  const residentDependentDeduction =
-    Math.max(0, safeInput.dependents) * config.dependentDeductionResidentTax;
+  const dependentIncomeDeduction =
+    (safeInput.dependentProfile.spouse ? config.spouseDeductionIncomeTax : 0) +
+    safeInput.dependentProfile.general * config.dependentDeductionIncomeTax.general +
+    safeInput.dependentProfile.specified * config.dependentDeductionIncomeTax.specified +
+    safeInput.dependentProfile.elderly * config.dependentDeductionIncomeTax.elderly;
+
+  const dependentResidentDeduction =
+    (safeInput.dependentProfile.spouse ? config.spouseDeductionResidentTax : 0) +
+    safeInput.dependentProfile.general * config.dependentDeductionResidentTax.general +
+    safeInput.dependentProfile.specified * config.dependentDeductionResidentTax.specified +
+    safeInput.dependentProfile.elderly * config.dependentDeductionResidentTax.elderly;
+
+  const optionalIncomeDeduction =
+    (safeInput.deductionOptions.idecoEnabled ? 240_000 : 0) +
+    (safeInput.deductionOptions.lifeInsuranceEnabled
+      ? config.lifeInsuranceDeductionIncomeTaxMax
+      : 0);
+  const optionalResidentDeduction =
+    (safeInput.deductionOptions.idecoEnabled ? 240_000 : 0) +
+    (safeInput.deductionOptions.lifeInsuranceEnabled
+      ? config.lifeInsuranceDeductionResidentTaxMax
+      : 0);
+
+  const deductionTotalIncomeTax = dependentIncomeDeduction + optionalIncomeDeduction;
+  const deductionTotalResidentTax = dependentResidentDeduction + optionalResidentDeduction;
 
   const incomeTaxable =
     annualBusinessIncome -
     employmentIncomeDeduction -
     config.basicDeductionIncomeTax -
     socialInsurance -
-    incomeDependentDeduction;
-  const incomeTax = calcIncomeTaxAmount(incomeTaxable, config.incomeTaxBrackets);
+    deductionTotalIncomeTax;
+
+  const grossIncomeTax = calcIncomeTaxAmount(incomeTaxable, config.incomeTaxBrackets);
+  const taxCreditIncomeTax = safeInput.deductionOptions.housingLoanEnabled ? 100_000 : 0;
+  const incomeTax = Math.max(0, grossIncomeTax - taxCreditIncomeTax);
 
   const residentTaxRate = Math.max(
     0,
@@ -79,27 +153,51 @@ export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult
     employmentIncomeDeduction -
     config.basicDeductionResidentTax -
     socialInsurance -
-    residentDependentDeduction;
+    deductionTotalResidentTax;
 
-  const residentTax =
+  const grossResidentTax =
     annualBusinessIncome <= config.residentTaxExemptionIncome || residentTaxable <= 0
       ? 0
       : residentTaxable * residentTaxRate +
         config.residentPerCapitaLevy +
         prefectureConfig.perCapitaLevyAdjustment;
 
+  const taxCreditResidentTax = safeInput.deductionOptions.hometownTaxEnabled ? 30_000 : 0;
+  const residentTax = Math.max(0, grossResidentTax - taxCreditResidentTax);
+
   const annualTakehome = baseGross - socialInsurance - incomeTax - residentTax;
   const appliedIncomeTaxRate = findIncomeTaxRate(incomeTaxable, config.incomeTaxBrackets);
 
   const calculationNotes: string[] = [];
-  calculationNotes.push(
+  const employmentLabel =
     safeInput.employmentType === "employee"
-      ? "会社員モデル: 給与所得控除を適用"
-      : "個人事業モデル: 必要経費率を適用"
-  );
-  if (safeInput.age >= 40 && safeInput.age < 65) {
+      ? "会社員"
+      : safeInput.employmentType === "contract"
+        ? "契約・派遣"
+        : safeInput.employmentType === "part_time"
+          ? "パート・アルバイト"
+          : "個人事業主";
+  calculationNotes.push(`${employmentLabel}モデルを適用`);
+
+  if (safeInput.insuranceInput.mode === "manual") {
+    calculationNotes.push("社会保険料は実額入力を優先");
+  } else if (safeInput.age >= 40 && safeInput.age < 65) {
     calculationNotes.push("40-64歳のため介護保険料を上乗せ");
   }
+
+  if (safeInput.deductionOptions.idecoEnabled) {
+    calculationNotes.push("iDeCo控除を適用");
+  }
+  if (safeInput.deductionOptions.lifeInsuranceEnabled) {
+    calculationNotes.push("生命保険料控除を適用");
+  }
+  if (safeInput.deductionOptions.hometownTaxEnabled) {
+    calculationNotes.push("ふるさと納税控除（簡易）を適用");
+  }
+  if (safeInput.deductionOptions.housingLoanEnabled) {
+    calculationNotes.push("住宅ローン控除（簡易）を適用");
+  }
+
   calculationNotes.push(`居住地補正: ${prefectureConfig.label}`);
 
   return {
@@ -118,18 +216,39 @@ export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult
     annualTakehome,
     monthlyTakehome: annualTakehome / 12,
     burdenRate: baseGross > 0 ? (socialInsurance + incomeTax + residentTax) / baseGross : 0,
+    deductionTotalIncomeTax,
+    deductionTotalResidentTax,
+    taxCreditIncomeTax,
+    taxCreditResidentTax,
     calculationNotes,
   };
 }
 
 function normalizeInput(input: Partial<TakehomeInput>): TakehomeInput {
+  const legacyDependents = Math.max(0, input.dependents ?? 0);
   return {
     annualGross: input.annualGross ?? 5_000_000,
-    dependents: input.dependents ?? 0,
     age: input.age ?? 35,
     taxYear: input.taxYear ?? DEFAULT_TAX_YEAR,
     employmentType: input.employmentType ?? "employee",
     prefecture: input.prefecture ?? DEFAULT_PREFECTURE,
+    dependentProfile: input.dependentProfile ?? {
+      spouse: false,
+      general: legacyDependents,
+      specified: 0,
+      elderly: 0,
+    },
+    deductionOptions: input.deductionOptions ?? {
+      idecoEnabled: false,
+      lifeInsuranceEnabled: false,
+      hometownTaxEnabled: false,
+      housingLoanEnabled: false,
+    },
+    insuranceInput: input.insuranceInput ?? {
+      mode: "auto",
+      manualAmount: 0,
+    },
+    dependents: input.dependents,
   };
 }
 

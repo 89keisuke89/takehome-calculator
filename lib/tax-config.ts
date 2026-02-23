@@ -19,7 +19,7 @@ export type EmploymentIncomeDeductionRule = {
   fixed?: number;
 };
 
-export type EmploymentType = "employee" | "self_employed";
+export type EmploymentType = "employee" | "contract" | "part_time" | "self_employed";
 
 type EmploymentModelConfig = {
   socialInsuranceRates: RangeRate[];
@@ -36,8 +36,20 @@ export type TaxYearConfig = {
   employmentIncomeDeductionMax: number;
   basicDeductionIncomeTax: number;
   basicDeductionResidentTax: number;
-  dependentDeductionIncomeTax: number;
-  dependentDeductionResidentTax: number;
+  spouseDeductionIncomeTax: number;
+  spouseDeductionResidentTax: number;
+  dependentDeductionIncomeTax: {
+    general: number;
+    specified: number;
+    elderly: number;
+  };
+  dependentDeductionResidentTax: {
+    general: number;
+    specified: number;
+    elderly: number;
+  };
+  lifeInsuranceDeductionIncomeTaxMax: number;
+  lifeInsuranceDeductionResidentTaxMax: number;
   residentPerCapitaLevy: number;
   residentBaseRate: number;
   residentTaxExemptionIncome: number;

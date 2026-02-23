@@ -171,6 +171,18 @@ select {
   font-size: 14px;
 }
 
+.check-toggle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.check-toggle input {
+  width: 16px;
+  height: 16px;
+}
+
 .mt-8 {
   margin-top: 8px;
 }
