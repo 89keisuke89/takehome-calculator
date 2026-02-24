@@ -9,6 +9,7 @@ import {
   toSalarySlug,
 } from "@/lib/takehome";
 import {
+  buildSalaryCaution,
   buildSalaryDescription,
   buildSalaryFaq,
   buildSalaryIntro,
@@ -63,6 +64,7 @@ export default function SalaryTakehomePage({ params }: Props) {
 
   const result = calculateTakehome({ annualGross });
   const introLines = buildSalaryIntro(annualGross, result);
+  const caution = buildSalaryCaution(annualGross);
   const faq = buildSalaryFaq(annualGross, result);
   const nearby = getNearbySalaryLevels(annualGross);
   const faqJsonLd = {
@@ -106,6 +108,7 @@ export default function SalaryTakehomePage({ params }: Props) {
               {line}
             </p>
           ))}
+          <p className="mt-12">{caution}</p>
         </section>
 
         <section className="card mt-20">

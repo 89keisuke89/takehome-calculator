@@ -26,6 +26,19 @@ export function buildSalaryIntro(annualGross: number, result: TakehomeResult): s
   ];
 }
 
+export function buildSalaryCaution(annualGross: number): string {
+  if (annualGross <= 3_000_000) {
+    return "低年収帯では住民税の非課税条件や社会保険加入条件で結果差が出やすいため、勤務実態ベースで再確認してください。";
+  }
+  if (annualGross <= 5_000_000) {
+    return "中間年収帯では扶養区分と各種控除の影響が大きく、同じ年収でも手取りが数万円単位で変わることがあります。";
+  }
+  if (annualGross <= 7_000_000) {
+    return "年収500万〜700万円帯では適用税率が切り替わる境目があるため、賞与額や控除有無で税負担が変動します。";
+  }
+  return "高年収帯では税率・控除上限の影響が強く出るため、住宅ローン控除やiDeCo等の適用条件を含めた確認を推奨します。";
+}
+
 export function buildSalaryFaq(annualGross: number, result: TakehomeResult): SalaryFaq[] {
   return [
     {
