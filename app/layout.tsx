@@ -13,7 +13,8 @@ const defaultDescription = activeDomainProduct
   ? activeDomainProduct.oneLiner
   : "年収・職業区分・都道府県・年齢・扶養人数から、手取り年収と月の受取額を無料で試算できる給与計算アプリです。";
 const siteName = activeDomainProduct ? activeDomainProduct.title : "手取り給与計算アプリ";
-const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+const googleSiteVerification =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "EVzVuUX4kHV1DxBMQymdDthyb7VbvaUVh-ecCV3h_Os";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
