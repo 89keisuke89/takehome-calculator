@@ -48,6 +48,9 @@ export default function RootLayout({
 
   return (
     <html lang="ja">
+      <head>
+        <meta name="google-site-verification" content={googleSiteVerification} />
+      </head>
       <body>
         {adsenseClient ? (
           <Script
