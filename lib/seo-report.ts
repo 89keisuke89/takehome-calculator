@@ -12,13 +12,14 @@ export function generateWeeklySeoReport(baseUrl: string): SeoReport {
   const generatedAt = new Date().toISOString();
   const topLevels = POPULAR_SALARY_LEVELS.slice(0, 6);
   const additionalLevels = SEO_SALARY_LEVELS.filter((salary) => !topLevels.includes(salary));
+  const topCount = topLevels.length;
   const priorityUrls = [...topLevels, ...additionalLevels].map(
     (salary) => `${baseUrl}/takehome/${toSalarySlug(salary)}`
   );
 
   const recommendedActions = [
-    "上位10URLのtitleを数値入りで更新",
-    "上位10URLにFAQを最低3件ずつ追加",
+    `上位${topCount}URLのtitleを数値入りで更新`,
+    `上位${topCount}URLにFAQを最低3件ずつ追加`,
     "各URLに近い年収リンクを4件以上維持",
     "Search Consoleで未インデックスURLを再送信",
   ];

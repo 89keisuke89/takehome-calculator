@@ -62,8 +62,29 @@ export type TakehomeResult = {
   calculationNotes: string[];
 };
 
-export const SEO_SALARY_LEVELS = [
-  2_500_000,
+function buildSalaryLevels(startMan: number, endMan: number, stepMan: number): number[] {
+  const levels: number[] = [];
+  for (let value = startMan; value <= endMan; value += stepMan) {
+    levels.push(value * 10_000);
+  }
+  return levels;
+}
+
+const BASE_SEO_SALARY_LEVELS = buildSalaryLevels(200, 1000, 20);
+const HIGH_INCOME_SEO_SALARY_LEVELS = [
+  12_000_000,
+  14_000_000,
+  16_000_000,
+  18_000_000,
+  20_000_000,
+  25_000_000,
+  30_000_000,
+  40_000_000,
+  50_000_000,
+];
+
+export const SEO_SALARY_LEVELS = [...BASE_SEO_SALARY_LEVELS, ...HIGH_INCOME_SEO_SALARY_LEVELS];
+export const POPULAR_SALARY_LEVELS = [
   3_000_000,
   3_500_000,
   4_000_000,
@@ -73,8 +94,8 @@ export const SEO_SALARY_LEVELS = [
   6_000_000,
   7_000_000,
   8_000_000,
+  10_000_000,
 ];
-export const POPULAR_SALARY_LEVELS = SEO_SALARY_LEVELS;
 
 export function calculateTakehome(input: Partial<TakehomeInput>): TakehomeResult {
   const safeInput = normalizeInput(input);
