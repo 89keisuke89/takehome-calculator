@@ -5,16 +5,16 @@ export type SalaryFaq = {
   answer: string;
 };
 
-export function buildSalaryTitle(annualGross: number): string {
-  return `年収${annualGross.toLocaleString("ja-JP")}円の手取りはいくら？月収・税金内訳を自動計算`;
+export function buildSalaryTitle(annualGross: number, taxYear: number): string {
+  return `【${taxYear}年版】年収${annualGross.toLocaleString("ja-JP")}円の手取りはいくら？月収・税金内訳`;
 }
 
 export function buildSalaryDescription(annualGross: number, result: TakehomeResult): string {
-  return `年収${annualGross.toLocaleString("ja-JP")}円の月手取り目安は${Math.round(
+  return `【${result.taxYear}年度計算】年収${annualGross.toLocaleString("ja-JP")}円の月手取り目安は${Math.round(
     result.monthlyTakehome
   ).toLocaleString(
     "ja-JP"
-  )}円。社会保険料・所得税・住民税の内訳と負担率を確認できます。`;
+  )}円。会社員/個人事業主・扶養条件まで反映し、社会保険料・所得税・住民税の内訳を確認できます。`;
 }
 
 export function buildSalaryIntro(annualGross: number, result: TakehomeResult): string[] {

@@ -70,20 +70,20 @@ function buildSalaryLevels(startMan: number, endMan: number, stepMan: number): n
   return levels;
 }
 
-const BASE_SEO_SALARY_LEVELS = buildSalaryLevels(200, 1000, 20);
-const HIGH_INCOME_SEO_SALARY_LEVELS = [
+const BASE_SEO_SALARY_LEVELS = buildSalaryLevels(200, 600, 10);
+const EXTENDED_SEO_SALARY_LEVELS = [
+  6_500_000,
+  7_000_000,
+  7_500_000,
+  8_000_000,
+  9_000_000,
+  10_000_000,
   12_000_000,
-  14_000_000,
-  16_000_000,
-  18_000_000,
+  15_000_000,
   20_000_000,
-  25_000_000,
-  30_000_000,
-  40_000_000,
-  50_000_000,
 ];
 
-export const SEO_SALARY_LEVELS = [...BASE_SEO_SALARY_LEVELS, ...HIGH_INCOME_SEO_SALARY_LEVELS];
+export const SEO_SALARY_LEVELS = [...BASE_SEO_SALARY_LEVELS, ...EXTENDED_SEO_SALARY_LEVELS];
 export const POPULAR_SALARY_LEVELS = [
   3_000_000,
   3_500_000,

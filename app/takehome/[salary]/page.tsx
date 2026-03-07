@@ -15,6 +15,7 @@ import {
   buildSalaryIntro,
   buildSalaryTitle,
 } from "@/lib/seo-content";
+import { getScenariosForSalary, getScenarioUrl } from "@/lib/takehome-scenarios";
 
 type Props = {
   params: { salary: string };
@@ -27,7 +28,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const annualGross = fromSalarySlug(params.salary) ?? 0;
   const result = calculateTakehome({ annualGross });
-  const title = buildSalaryTitle(annualGross);
+  const title = buildSalaryTitle(annualGross, result.taxYear);
   const description = buildSalaryDescription(annualGross, result);
   return {
     title,
@@ -67,6 +68,7 @@ export default function SalaryTakehomePage({ params }: Props) {
   const caution = buildSalaryCaution(annualGross);
   const faq = buildSalaryFaq(annualGross, result);
   const nearby = getNearbySalaryLevels(annualGross);
+  const scenarioLinks = getScenariosForSalary(annualGross, 4);
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -83,12 +85,21 @@ export default function SalaryTakehomePage({ params }: Props) {
   return (
     <main>
       <div className="container">
-        <h1>{buildSalaryTitle(annualGross)}</h1>
+        <h1>{buildSalaryTitle(annualGross, result.taxYear)}</h1>
         <p>
           月あたり手取りは <strong>{Math.round(result.monthlyTakehome).toLocaleString("ja-JP")}円</strong> が目安です。
         </p>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
         <AdSenseSlot slot="2345678901" className="mt-20" />
+
+        <section className="card mt-20">
+          <h2>このページの結論</h2>
+          <div className="list mt-20">
+            <div className="list-item">月あたり手取り: {Math.round(result.monthlyTakehome).toLocaleString("ja-JP")}円</div>
+            <div className="list-item">年間手取り: {Math.round(result.annualTakehome).toLocaleString("ja-JP")}円</div>
+            <div className="list-item">負担率: {(result.burdenRate * 100).toFixed(1)}%</div>
+          </div>
+        </section>
 
         <section className="card mt-20">
           <h2>内訳</h2>
@@ -129,6 +140,17 @@ export default function SalaryTakehomePage({ params }: Props) {
             {nearby.map((salary) => (
               <Link key={salary} href={`/takehome/${toSalarySlug(salary)}`}>
                 年収{salary.toLocaleString("ja-JP")}円の手取り目安
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="card mt-20">
+          <h2>条件別の手取りページ</h2>
+          <div className="seo-links mt-12">
+            {scenarioLinks.map((scenario) => (
+              <Link key={scenario.slug} href={getScenarioUrl(scenario.slug)}>
+                {scenario.title}
               </Link>
             ))}
           </div>
