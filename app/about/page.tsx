@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import { getActiveDomainProduct } from "@/lib/active-domain";
+
+const activeDomainProduct = getActiveDomainProduct();
+const siteName = activeDomainProduct?.title ?? "手取り給与計算アプリ";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://takehome-calculator.pages.dev";
 
 export const metadata: Metadata = {
-  title: "運営者情報",
-  description: "手取り給与計算アプリの運営者情報",
+  title: `${siteName} | 運営者情報`,
+  description: `${siteName}の運営者情報`,
   alternates: {
     canonical: "/about",
   },
@@ -15,10 +20,10 @@ export default function AboutPage() {
         <section className="card">
           <h1>運営者情報</h1>
           <div className="list mt-20">
-            <div className="list-item">サイト名: 手取り給与計算アプリ</div>
+            <div className="list-item">サイト名: {siteName}</div>
             <div className="list-item">運営者: kimura</div>
             <div className="list-item">所在地: 日本</div>
-            <div className="list-item">公開URL: https://takehome-calculator.pages.dev</div>
+            <div className="list-item">公開URL: {appUrl}</div>
             <div className="list-item">連絡先: contact.takehome.calculator@gmail.com</div>
           </div>
 
@@ -29,7 +34,7 @@ export default function AboutPage() {
 
           <h2 className="mt-20">サービスについて</h2>
           <p className="mt-8">
-            本サイトは、年収に対する手取り額の概算を提供する情報サービスです。税務・法務・投資等の専門的助言を提供するものではありません。
+            本サイトは、業務改善のための試算・情報提供サービスです。税務・法務・投資等の専門的助言を提供するものではありません。
           </p>
         </section>
       </div>

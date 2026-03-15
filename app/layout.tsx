@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import { getActiveDomainProduct } from "@/lib/active-domain";
+import { PwaRegister } from "./components/pwa-register";
 import "./globals.css";
 
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -20,12 +21,25 @@ export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: defaultTitle,
   description: defaultDescription,
+  manifest: "/manifest.webmanifest",
   openGraph: {
     title: siteName,
     description: defaultDescription,
     type: "website",
     locale: "ja_JP",
     siteName,
+  },
+  icons: {
+    icon: [
+      { url: "/icons/snake-192.svg", type: "image/svg+xml" },
+      { url: "/icons/snake-512.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/icons/snake-180.svg", type: "image/svg+xml" }],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: siteName,
   },
   alternates: {
     canonical: "/",
@@ -43,6 +57,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const adsenseClient = process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT;
+  const adBreakTestMode =
+    process.env.NEXT_PUBLIC_ADBREAK_TEST_MODE ??
+    (process.env.NODE_ENV === "production" ? undefined : "on");
+  const admobInterstitialSlot = process.env.NEXT_PUBLIC_ADMOB_INTERSTITIAL_SLOT;
+  const admobRewardedSlot = process.env.NEXT_PUBLIC_ADMOB_REWARDED_SLOT;
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const cloudflareAnalyticsToken = process.env.NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN;
 
@@ -50,15 +69,28 @@ export default function RootLayout({
     <html lang="ja">
       <head>
         <meta name="google-site-verification" content={googleSiteVerification} />
+        <meta name="theme-color" content="#8b3f2f" />
       </head>
       <body>
+        <PwaRegister />
         {adsenseClient ? (
-          <Script
-            async
-            strategy="afterInteractive"
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-            crossOrigin="anonymous"
-          />
+          <>
+            <Script
+              async
+              strategy="afterInteractive"
+              src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+              crossOrigin="anonymous"
+              data-adbreak-test={adBreakTestMode}
+              data-admob-interstitial-slot={admobInterstitialSlot}
+              data-admob-rewarded-slot={admobRewardedSlot}
+            />
+            <Script id="ad-placement-api-init" strategy="afterInteractive">
+              {`window.adsbygoogle = window.adsbygoogle || [];
+window.adBreak = window.adBreak || function(o) { window.adsbygoogle.push(o); };
+window.adConfig = window.adConfig || function(o) { window.adsbygoogle.push(o); };
+window.adConfig({ preloadAdBreaks: 'on', sound: 'on' });`}
+            </Script>
+          </>
         ) : null}
         {gaMeasurementId ? (
           <>

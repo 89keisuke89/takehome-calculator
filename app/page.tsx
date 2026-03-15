@@ -5,7 +5,7 @@ import { TakehomeCalculator } from "./components/takehome-calculator";
 import { POPULAR_SALARY_LEVELS, toSalarySlug } from "@/lib/takehome";
 import { getScenarioUrl, TAKEHOME_SCENARIOS } from "@/lib/takehome-scenarios";
 
-const homeTitle = "【無料】手取り計算アプリ｜年収・給料から月の手取りを自動計算【2027年版】";
+const homeTitle = "【無料】手取り計算アプリ｜年収・給料から月の手取りを自動計算";
 const homeDescription =
   "無料の手取り計算アプリです。年収・給料から月の手取りを自動計算し、社会保険料・所得税・住民税の内訳まで確認できます。会社員・個人事業主・パートに対応。";
 
@@ -42,8 +42,7 @@ export default function HomePage() {
           社会保険料・所得税・住民税の内訳まで確認できます。
         </p>
         <p className="small mt-12">
-          検索の多い「手取り 計算」「年収 手取り 計算」「給料 手取り計算アプリ」を想定した、
-          無料の手取りシミュレーションツールです。
+          無料で使える手取りシミュレーションツールです。
         </p>
         <AdPlacementExperiment position="header" />
 

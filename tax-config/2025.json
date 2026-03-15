@@ -1,0 +1,91 @@
+{
+  "year": 2025,
+  "incomeTaxBrackets": [
+    { "upper": 1950000, "rate": 0.05, "deduction": 0 },
+    { "upper": 3300000, "rate": 0.1, "deduction": 97500 },
+    { "upper": 6950000, "rate": 0.2, "deduction": 427500 },
+    { "upper": 9000000, "rate": 0.23, "deduction": 636000 },
+    { "upper": 18000000, "rate": 0.33, "deduction": 1536000 },
+    { "upper": 40000000, "rate": 0.4, "deduction": 2796000 },
+    { "upper": 999999999999, "rate": 0.45, "deduction": 4796000 }
+  ],
+  "employmentIncomeDeductionRules": [
+    { "upper": 1625000, "rate": 0, "adjustment": 0, "fixed": 550000 },
+    { "upper": 1800000, "rate": 0.4, "adjustment": -100000 },
+    { "upper": 3600000, "rate": 0.3, "adjustment": 80000 },
+    { "upper": 6600000, "rate": 0.2, "adjustment": 440000 },
+    { "upper": 8500000, "rate": 0.1, "adjustment": 1100000 },
+    { "upper": 999999999999, "rate": 0, "adjustment": 0, "fixed": 1950000 }
+  ],
+  "employmentIncomeDeductionMin": 550000,
+  "employmentIncomeDeductionMax": 1950000,
+  "basicDeductionIncomeTax": 480000,
+  "basicDeductionResidentTax": 430000,
+  "spouseDeductionIncomeTax": 380000,
+  "spouseDeductionResidentTax": 330000,
+  "dependentDeductionIncomeTax": {
+    "general": 380000,
+    "specified": 630000,
+    "elderly": 480000
+  },
+  "dependentDeductionResidentTax": {
+    "general": 330000,
+    "specified": 450000,
+    "elderly": 380000
+  },
+  "lifeInsuranceDeductionIncomeTaxMax": 40000,
+  "lifeInsuranceDeductionResidentTaxMax": 28000,
+  "residentPerCapitaLevy": 5000,
+  "residentBaseRate": 0.1,
+  "residentTaxExemptionIncome": 1000000,
+  "employmentModels": {
+    "employee": {
+      "socialInsuranceRates": [
+        { "upper": 2500000, "rate": 0.135 },
+        { "upper": 4000000, "rate": 0.145 },
+        { "upper": 7000000, "rate": 0.15 },
+        { "upper": 10000000, "rate": 0.155 },
+        { "upper": 999999999999, "rate": 0.16 }
+      ],
+      "careInsuranceRate": 0.008,
+      "businessExpenseRate": 0,
+      "useEmploymentIncomeDeduction": true
+    },
+    "contract": {
+      "socialInsuranceRates": [
+        { "upper": 2500000, "rate": 0.132 },
+        { "upper": 4000000, "rate": 0.142 },
+        { "upper": 7000000, "rate": 0.148 },
+        { "upper": 10000000, "rate": 0.153 },
+        { "upper": 999999999999, "rate": 0.158 }
+      ],
+      "careInsuranceRate": 0.008,
+      "businessExpenseRate": 0,
+      "useEmploymentIncomeDeduction": true
+    },
+    "part_time": {
+      "socialInsuranceRates": [
+        { "upper": 2000000, "rate": 0.12 },
+        { "upper": 3500000, "rate": 0.13 },
+        { "upper": 5500000, "rate": 0.14 },
+        { "upper": 8000000, "rate": 0.145 },
+        { "upper": 999999999999, "rate": 0.15 }
+      ],
+      "careInsuranceRate": 0.007,
+      "businessExpenseRate": 0,
+      "useEmploymentIncomeDeduction": true
+    },
+    "self_employed": {
+      "socialInsuranceRates": [
+        { "upper": 2000000, "rate": 0.115 },
+        { "upper": 3500000, "rate": 0.125 },
+        { "upper": 5500000, "rate": 0.135 },
+        { "upper": 8000000, "rate": 0.145 },
+        { "upper": 999999999999, "rate": 0.155 }
+      ],
+      "careInsuranceRate": 0.007,
+      "businessExpenseRate": 0.2,
+      "useEmploymentIncomeDeduction": false
+    }
+  }
+}

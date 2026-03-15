@@ -5,6 +5,7 @@
 
 標準運用手順: `DEPLOY_PLAYBOOK.md`
 別ドメイン公開手順: `MULTI_DOMAIN_DEPLOY.md`
+モバイル公開方針: `ops/mobile-release-playbook.md`
 
 ## 1. セットアップ
 
@@ -18,16 +19,26 @@ cp .env.example .env.local
 ```bash
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT=ca-pub-xxxxxxxxxxxxxxxx
+NEXT_PUBLIC_ADBREAK_TEST_MODE=on
+NEXT_PUBLIC_ADMOB_INTERSTITIAL_SLOT=
+NEXT_PUBLIC_ADMOB_REWARDED_SLOT=
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
 NEXT_PUBLIC_GA_MEASUREMENT_ID=
 NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN=
 NEXT_PUBLIC_ACTIVE_DOMAIN_SLUG=
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_ACCOUNT_ID=
+PAGES_PROJECT_PREFIX=
+PAGES_PRODUCTION_BRANCH=main
 ```
 
 補足:
 
 - `NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT` 未設定時は広告枠プレースホルダーを表示します。
+- `NEXT_PUBLIC_ADBREAK_TEST_MODE=on` で Ad Placement API のテスト広告モードになります（本番は `off` 推奨）。
+- `NEXT_PUBLIC_ADMOB_INTERSTITIAL_SLOT` / `NEXT_PUBLIC_ADMOB_REWARDED_SLOT` はWebViewラッパー連携時のみ設定します。
 - `NEXT_PUBLIC_ACTIVE_DOMAIN_SLUG` を設定すると、指定ドメイン用のトップページ表示に切り替わります（例: `receivable-flow`）。
+- `CLOUDFLARE_API_TOKEN` は Cloudflare 一括デプロイ時に必須です。
 - 既存の Supabase / Stripe API を使う場合は、同じ `.env.local` に各キーを設定してください。
 
 ## 2. 起動（通常モード）
@@ -37,9 +48,16 @@ npm run dev
 ```
 
 - 計算ページ: `/`
+- Snakeミニゲーム: `/games/snake`
 - 年収別SEOページ: `/takehome/[年収(万円)]` 例: `/takehome/500`
 - 運用ページ: `/ops`
 - サイトマップ: `/sitemap.xml`
+
+スマホでのPWAインストール:
+
+1. `/games/snake` を開く
+2. ブラウザメニューから「ホーム画面に追加」を実行
+3. 追加後はアプリ表示（standalone）で起動
 
 ## 3. 別ドメインとして10本出力
 
@@ -91,6 +109,43 @@ npm run build
 ```
 
 `tests/takehome.test.ts` で主要ケース（職業区分、年齢、都道府県補正、扶養）を検証します。
+
+Snakeロジックは `tests/snake.test.ts` で検証します。
+
+手動確認チェックリスト（Snake）:
+
+- `/games/snake` にアクセスできる
+- 矢印/WASD・盤面スワイプ・画面ボタンで移動できる
+- スコア20/50到達でフェーズ表示が変わる（実力 -> 実力+運 -> 運重視）
+- 紫の特殊フードで運イベント（大当たり/ハザード）が発生する
+- `Pause/Resume` と `Restart` が動作する
+- 壁・自己衝突でゲームオーバーになる
+- ゲームオーバー時に広告復活（1回）できる
+- 体力消費で開始制御され、時間経過と広告で回復できる
+- ハイスコアが「ノー復活」「復活あり」で分かれて保持される（localStorage）
+- AdSense有効時は `adBreak` API で実視聴判定後のみ報酬を付与する
+- ホーム画面追加後にPWAとして起動できる
+
+## 6.5 Cloudflare Pagesへ10本一括デプロイ
+
+```bash
+npm run deploy:cloudflare:all
+```
+
+`deploy:cloudflare:all` は `.env.local` を自動で読み込みます。
+
+利用できる環境変数:
+
+- `PAGES_PROJECT_PREFIX=prod-`（プロジェクト名の接頭辞）
+- `SKIP_BUILD=1`（既存の `domain-out` を使ってデプロイ）
+- `ADD_CUSTOM_DOMAINS=1`（Cloudflare APIでカスタムドメイン追加）
+
+## 6.6 Search Console / AdSense運用ファイル
+
+- Search Console URL Prefix: `ops/search-console-url-prefixes.txt`
+- Search Console Sitemap: `ops/search-console-sitemaps.txt`
+- AdSense申請チェック: `ops/adsense-submission-checklist.md`
+- 集中上位3本: `ops/focus-top3.md`
 
 ## 7. 自動化済み項目
 

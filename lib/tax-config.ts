@@ -1,3 +1,4 @@
+import config2025 from "../tax-config/2025.json";
 import config2026 from "../tax-config/2026.json";
 import config2027 from "../tax-config/2027.json";
 
@@ -57,6 +58,7 @@ export type TaxYearConfig = {
 };
 
 export const TAX_CONFIGS: Record<number, TaxYearConfig> = {
+  2025: config2025 as TaxYearConfig,
   2027: config2027 as TaxYearConfig,
   2026: config2026 as TaxYearConfig,
 };
@@ -65,7 +67,7 @@ export const TAX_YEARS = Object.keys(TAX_CONFIGS)
   .map((year) => Number(year))
   .sort((a, b) => b - a);
 
-export const DEFAULT_TAX_YEAR = TAX_YEARS[0];
+export const DEFAULT_TAX_YEAR = 2025;
 
 export function getTaxConfig(year: number): TaxYearConfig {
   return TAX_CONFIGS[year] ?? TAX_CONFIGS[DEFAULT_TAX_YEAR];

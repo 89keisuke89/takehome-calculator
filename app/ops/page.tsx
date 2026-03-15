@@ -1,9 +1,16 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { UpdateOpsPanel } from "@/app/components/update-ops-panel";
+import { getActiveDomainProduct } from "@/lib/active-domain";
 import { generateWeeklySeoReport } from "@/lib/seo-report";
 import { SEO_SALARY_LEVELS, toSalarySlug } from "@/lib/takehome";
 
 export default function OpsPage() {
+  const activeDomainProduct = getActiveDomainProduct();
+  if (activeDomainProduct) {
+    notFound();
+  }
+
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const report = generateWeeklySeoReport(baseUrl);
   const searchConsoleTargets = SEO_SALARY_LEVELS.map(

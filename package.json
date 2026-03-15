@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:domains": "bash ./scripts/build-domain-sites.sh",
+    "deploy:cloudflare:all": "bash ./scripts/deploy-cloudflare-pages.sh",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run"

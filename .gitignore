@@ -1,12 +1,23 @@
 # dependencies
 /node_modules
+/.local-bin/
 
 # next
 /.next/
 /out/
+/domain-out/
 
 # local env files
 .env*.local
+/wordpress-local/shared/
+/wordpress-local/wp-content/cache/
+/wordpress-local/wp-content/database/
+/wordpress-local/wp-content/plugins/
+/wordpress-local/wp-content/themes/*
+!/wordpress-local/wp-content/themes/finance-hub/
+!/wordpress-local/wp-content/themes/finance-hub/**
+/wordpress-local/wp-content/uploads/
+/wordpress-local/wp-content/upgrade/
 
 # misc
 .DS_Store

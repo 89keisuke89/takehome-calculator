@@ -1,0 +1,94 @@
+/*
+Theme Name: Finance Hub
+Theme URI: http://127.0.0.1:9400/
+Author: Codex
+Description: Minimal local theme for the finance news site.
+Version: 1.0.0
+Text Domain: finance-hub
+*/
+
+body {
+	background: #f4efe4;
+	color: #1c1a17;
+	font-family: Georgia, "Times New Roman", serif;
+	margin: 0;
+}
+
+a {
+	color: #8a2d1f;
+}
+
+.site-shell {
+	margin: 0 auto;
+	max-width: 880px;
+	padding: 48px 24px 80px;
+}
+
+.site-header {
+	border-bottom: 1px solid #d3c7b5;
+	margin-bottom: 32px;
+	padding-bottom: 20px;
+}
+
+.site-title {
+	font-size: clamp(2.5rem, 6vw, 4.5rem);
+	line-height: 0.95;
+	margin: 0 0 8px;
+	text-transform: uppercase;
+}
+
+.site-tagline {
+	color: #5c554d;
+	font-size: 1rem;
+	letter-spacing: 0.08em;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.hero {
+	background: linear-gradient(135deg, #efe1c7, #f7f3eb);
+	border: 1px solid #d3c7b5;
+	border-radius: 24px;
+	margin-bottom: 28px;
+	padding: 28px;
+}
+
+.hero h2 {
+	font-size: clamp(1.8rem, 4vw, 3rem);
+	line-height: 1;
+	margin: 0 0 12px;
+}
+
+.hero p {
+	font-size: 1.05rem;
+	line-height: 1.6;
+	margin: 0;
+	max-width: 52ch;
+}
+
+.post-list {
+	display: grid;
+	gap: 18px;
+}
+
+.post-card {
+	background: #fffaf1;
+	border: 1px solid #d3c7b5;
+	border-radius: 18px;
+	padding: 20px;
+}
+
+.post-card h3 {
+	font-size: 1.3rem;
+	margin: 0 0 10px;
+}
+
+.post-card p {
+	line-height: 1.6;
+	margin: 0 0 10px;
+}
+
+.post-meta {
+	color: #6b6258;
+	font-size: 0.92rem;
+}

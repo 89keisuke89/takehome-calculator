@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { getActiveDomainProduct } from "@/lib/active-domain";
+
+const activeDomainProduct = getActiveDomainProduct();
+const siteName = activeDomainProduct?.title ?? "手取り給与計算アプリ";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー",
-  description: "手取り給与計算アプリのプライバシーポリシー",
+  title: `${siteName} | プライバシーポリシー`,
+  description: `${siteName}のプライバシーポリシー`,
   alternates: {
     canonical: "/privacy",
   },
@@ -15,7 +19,7 @@ export default function PrivacyPage() {
         <section className="card">
           <h1>プライバシーポリシー</h1>
           <p className="mt-12">
-            本サイト（手取り給与計算アプリ）は、以下の方針に基づいて利用者情報を取り扱います。
+            本サイト（{siteName}）は、以下の方針に基づいて利用者情報を取り扱います。
           </p>
 
           <h2 className="mt-20">1. 取得する情報</h2>
