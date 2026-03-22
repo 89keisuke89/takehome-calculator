@@ -9,11 +9,11 @@ const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const activeDomainProduct = getActiveDomainProduct();
 const defaultTitle = activeDomainProduct
   ? `${activeDomainProduct.title} | ${activeDomainProduct.domain}`
-  : "手取り給与計算アプリ | 年収から月の手取りを30秒で概算";
+  : "金融計算ツール総合サイト | 手取り・バイト給料・残業代・ローン計算";
 const defaultDescription = activeDomainProduct
   ? activeDomainProduct.oneLiner
-  : "年収・職業区分・都道府県・年齢・扶養人数から、手取り年収と月の受取額を無料で試算できる給与計算アプリです。";
-const siteName = activeDomainProduct ? activeDomainProduct.title : "手取り給与計算アプリ";
+  : "手取り計算、バイト給料計算、残業代計算、ローン返済計算を無料で使える金融計算ツール集です。";
+const siteName = activeDomainProduct ? activeDomainProduct.title : "金融計算ツール総合サイト";
 const googleSiteVerification =
   process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "EVzVuUX4kHV1DxBMQymdDthyb7VbvaUVh-ecCV3h_Os";
 

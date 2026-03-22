@@ -5,7 +5,7 @@ import { TAKEHOME_SCENARIOS } from "@/lib/takehome-scenarios";
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPaths = ["", "/about", "/privacy", "/ops"];
+  const staticPaths = ["", "/parttime-pay", "/overtime-pay", "/loan", "/about", "/privacy", "/ops"];
   const staticUrls = staticPaths.map((path) => ({
     url: `${baseUrl}${path}`,
     changeFrequency: "weekly" as const,

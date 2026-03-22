@@ -1,6 +1,6 @@
-# 手取り給与計算アプリ / 10ドメインMVP
+# 金融計算ツール総合サイト / 10ドメインMVP
 
-年収から手取り（年/ 月）を概算する Next.js アプリです。  
+手取り計算、バイト給料計算、残業代計算、ローン返済計算をまとめた Next.js アプリです。  
 低維持費運用を前提に、広告（Google AdSense）を配置できる構成にしています。
 
 標準運用手順: `DEPLOY_PLAYBOOK.md`
@@ -48,6 +48,9 @@ npm run dev
 ```
 
 - 計算ページ: `/`
+- バイト給料計算: `/parttime-pay`
+- 残業代計算: `/overtime-pay`
+- ローン返済計算: `/loan`
 - Snakeミニゲーム: `/games/snake`
 - 年収別SEOページ: `/takehome/[年収(万円)]` 例: `/takehome/500`
 - 運用ページ: `/ops`

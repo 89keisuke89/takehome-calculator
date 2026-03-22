@@ -3,14 +3,14 @@ import { getActiveDomainProduct } from "@/lib/active-domain";
 
 export default function manifest(): MetadataRoute.Manifest {
   const activeDomainProduct = getActiveDomainProduct();
-  const appName = activeDomainProduct ? activeDomainProduct.title : "手取り給与計算アプリ";
-  const startUrl = activeDomainProduct ? "/" : "/games/snake";
+  const appName = activeDomainProduct ? activeDomainProduct.title : "金融計算ツール総合サイト";
+  const startUrl = "/";
 
   return {
-    id: "/games/snake",
-    name: `${appName} | Snake`,
-    short_name: "Snake",
-    description: "クラシックなSnakeをスマホ/ブラウザで遊べるPWAミニゲーム。",
+    id: "/",
+    name: appName,
+    short_name: "金融計算",
+    description: "手取り、バイト給料、残業代、ローン返済を無料で計算できる金融ツール集。",
     start_url: startUrl,
     scope: "/",
     display: "standalone",
@@ -18,13 +18,28 @@ export default function manifest(): MetadataRoute.Manifest {
     orientation: "portrait",
     background_color: "#f8f5ef",
     theme_color: "#8b3f2f",
-    categories: ["games", "entertainment"],
+    categories: ["finance", "utilities"],
     prefer_related_applications: false,
     shortcuts: [
       {
-        name: "Snakeを起動",
-        short_name: "Play",
-        url: "/games/snake",
+        name: "手取り計算",
+        short_name: "手取り",
+        url: "/",
+      },
+      {
+        name: "バイト給料計算",
+        short_name: "バイト",
+        url: "/parttime-pay",
+      },
+      {
+        name: "残業代計算",
+        short_name: "残業代",
+        url: "/overtime-pay",
+      },
+      {
+        name: "ローン返済計算",
+        short_name: "ローン",
+        url: "/loan",
       },
     ],
     icons: [
